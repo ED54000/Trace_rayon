@@ -4,3 +4,4 @@ out/
 # Fichiers et dossiers générés par Intellij
 .idea/
 *.iml
+*.out
