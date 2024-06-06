@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 public class RayTracerCalc implements ServiceRayTacer {
     Scene s;
 
-    public Image compute(int x0, int y0, int w, int h) throws RemoteException {
+    public synchronized Image  compute(int x0, int y0, int w, int h) throws RemoteException {
         System.out.println("Calcul");
         return s.compute(x0,y0,w,h);
     }
@@ -15,4 +15,7 @@ public class RayTracerCalc implements ServiceRayTacer {
         this.s = s;
     }
 
+    public boolean appel(){
+        return true;
+    }
 }

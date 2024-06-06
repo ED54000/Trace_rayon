@@ -7,4 +7,6 @@ public interface ServiceRayTacer extends Remote {
     public Image compute(int x0, int y0, int w, int h) throws RemoteException;
 
     public void setScene(Scene s) throws RemoteException;
+
+    public boolean appel() throws RemoteException;
 }

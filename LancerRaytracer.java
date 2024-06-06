@@ -13,7 +13,7 @@ public class LancerRaytracer {
 
     public static String aide = "Raytracer : synthèse d'image par lancé de rayons (https://en.wikipedia.org/wiki/Ray_tracing_(graphics))\n\nUsage : java LancerRaytracer [fichier-scène] [largeur] [hauteur]\n\tfichier-scène : la description de la scène (par défaut simple.txt)\n\tlargeur : largeur de l'image calculée (par défaut 512)\n\thauteur : hauteur de l'image calculée (par défaut 512)\n";
      
-    public static void main(String args[]) throws RemoteException {
+    public static void main(String args[]) throws RemoteException  {
 
         // Le fichier de description de la scène si pas fournie
         String fichier_description="simple.txt";
@@ -86,13 +86,41 @@ public class LancerRaytracer {
         System.out.println("Calcul de l'image :\n - Coordonnées : "+x0+","+y0
                            +"\n - Taille "+ largeur + "x" + hauteur);
 
+
         int rep = 0;
+        int largLocale,hautLocale;
+        Image image;
+        boolean calcule = true;
         for(int x = 0; x < largeur; x += cube){
             for(int y = 0; y < hauteur; y += cube){
-                Image image = services.get(rep).compute(x, y, cube, cube);
-                disp.setImage(image, x, y);
+                if(x + cube > largeur){
+                    largLocale = x%cube;
+                }else{
+                    largLocale = cube;
+                }
+                if(y + cube > hauteur){
+                    hautLocale = y%cube;
+                }else{
+                    hautLocale = cube;
+                }
+                calcule = true;
+                while(calcule){
+                    assert(!services.isEmpty());
+                    try{
+                        ThreadCalcul threadCalcul = new ThreadCalcul(x,y,hautLocale,largLocale, services.get(rep),disp);
+                        threadCalcul.start();
+                        calcule = false;
+                    }catch (Exception e){
+                        services.remove(rep);
+                    }
+
+                    if(rep >= services.toArray().length){
+                        rep = 0;
+                    }
+                }
+
                 rep++;
-                if(rep == services.toArray().length){
+                if(rep >= services.toArray().length){
                     rep = 0;
                 }
 
